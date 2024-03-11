@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Unlockit</string>
+    <string name="instructions">Unlock your door with your fingerprint and phone.</string>
+    <string name="colour_image">Colour Image</string>
+    <string name="upscale_image">Upscale Image</string>
+    <string name="choose_image">Choose Image</string>
+</resources>
