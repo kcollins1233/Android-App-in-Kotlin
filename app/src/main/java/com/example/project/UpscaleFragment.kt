@@ -86,6 +86,9 @@ class UpscaleFragment : Fragment(), View.OnClickListener {
             val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
             imgView.setImageBitmap(bitmap)
 
+            scope.launch {
+                            SocketManager().start(Dispatchers.IO, bitmap)
+                        }
 
 
 
