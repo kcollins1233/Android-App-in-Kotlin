@@ -3,12 +3,11 @@ package com.example.project
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.media.ImageReader
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,31 +16,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import androidx.documentfile.provider.DocumentFile
-import crocodile8.image_picker_plus.ImagePickerPlus
-import crocodile8.image_picker_plus.PickRequest
-import crocodile8.image_picker_plus.PickSource
-import kotlinx.coroutines.MainScope
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
-import java.net.URI
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.*
+import org.greenrobot.eventbus.EventBus
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
+import java.net.Socket
+import kotlin.coroutines.CoroutineContext
 
 
 class UpscaleFragment : Fragment(), View.OnClickListener {
 
     private lateinit var upscaleButton: Button
     private lateinit var imgView: ImageView
+//    private var connected by Delegates.notNull<Boolean>()
     private val scope = MainScope()
-    private var resolver = activity?.contentResolver
+    private var context: Context? = null
+
+
 
 
 
@@ -52,6 +45,8 @@ class UpscaleFragment : Fragment(), View.OnClickListener {
         upscaleButton = myView.findViewById(R.id.imgPickButton) as Button
         upscaleButton.setOnClickListener(this)
         imgView = myView.findViewById(R.id.imageView) as ImageView
+        context = container?.context
+//        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().permitAll().build())
 
         return myView
     }
@@ -68,15 +63,18 @@ class UpscaleFragment : Fragment(), View.OnClickListener {
 
     }
 
+
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK){
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+
 
             val uri: Uri = data?.data!!
             val context: Context = requireContext()
 
-            val path: String = crocodile8.image_picker_plus.utils.FilePath.getPath(context, uri)
+//            val path: String = crocodile8.image_picker_plus.utils.FilePath.getPath(context, uri)
 
 //            writeFile(requireContext(), "test.jpg", uri.toString())
             Log.e("Path", uri.toString())
@@ -85,10 +83,42 @@ class UpscaleFragment : Fragment(), View.OnClickListener {
 //                ClientSocket().sendFiles(data.toString())
 //            }
 
+            val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            imgView.setImageBitmap(bitmap)
+
+
+
 
 
 
         }
     }
+
+    class SocketManager {
+        private val socket = Socket("192.168.0.198", 8080)
+        private val out = DataOutputStream(socket.getOutputStream())
+        protected val scope = CoroutineScope(TODO())
+
+        suspend fun start(coroutineContext: CoroutineContext, bitmap: Bitmap) = coroutineScope {
+            scope.launch(coroutineContext) {
+                out.writeBytes(encodeImage(bitmap))
+            }
+
+
+        }
+
+        private fun encodeImage(bitmap: Bitmap): String {
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val b: ByteArray = baos.toByteArray()
+            return android.util.Base64.encodeToString(b, android.util.Base64.DEFAULT)
+        }
+    }
+
+    interface MyInterface {
+        fun sendData(bitmap: Bitmap)
+    }
+
+
 
 }

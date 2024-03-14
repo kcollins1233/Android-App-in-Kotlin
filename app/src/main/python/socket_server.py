@@ -1,23 +1,44 @@
-import socket
+import socketio
+import eventlet
+import io
+import base64
+from PIL import Image
 
-# Create a socket object
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Create a Socket.IO server
+sio = socketio.Server(async_mode='eventlet', async_handlers=True)
 
-# Bind the socket to a specific IP address and port
-server_socket.bind(('127.0.0.1', 12345))
+# Wrap with a WSGI application
+app = socketio.WSGIApp(sio)
 
-# Listen for incoming connections
-server_socket.listen()
-
-# Accept a connection from a client
-client_socket, client_address = server_socket.accept()
-
-# Receive data from the client
-data = client_socket.recv(1024)
-
-# Process the received data
-print(f"Received data from client: {data.decode()}")
-
-# Close the connection
-client_socket.close()
-server_socket.close()
+@sio.event
+def connect(sid, environ):
+    print('server connected to client with session ID =  ', sid)
+    # response(sid, 'connected')
+    
+@sio.event
+def disconnect(sid):
+    print('disconnect=>SERVER', 'SID: ', sid)
+    
+@sio.event
+def on_message(sid, data):
+    # print(data)
+    # received_image = Image.open(decode_image(data))
+    # received_image.show()
+    print('image received from client: ', sid, 'data: ', data)
+    sio.emit('response', data)
+    
+@sio.event
+def message(sid, data):#
+    sio.send('message', data)
+    print('message ', sid, data)
+    
+def decode_image(data):
+    b = base64.b64decode(data)
+    print(b)
+    image = Image.open(io.BytesIO(b))
+    return image
+    
+if __name__ == '__main__':
+    eventlet.wsgi.server(eventlet.listen(('192.168.0.198', 8080)), app)
+    
+    
