@@ -98,16 +98,17 @@ class UpscaleFragment : Fragment(), View.OnClickListener {
     }
 
     class SocketManager {
-        private val socket = Socket("192.168.0.198", 8080)
         private val out = DataOutputStream(socket.getOutputStream())
         protected val scope = CoroutineScope(TODO())
+        private lateinit var socket: Socket
+        private lateinit var out: DataOutputStream
 
         suspend fun start(coroutineContext: CoroutineContext, bitmap: Bitmap) = coroutineScope {
-            scope.launch(coroutineContext) {
-                out.writeBytes(encodeImage(bitmap))
-            }
-
-
+            withContext(coroutineContext) {
+            socket = Socket("192.168.0.198", 8080)
+            out = DataOutputStream(socket.getOutputStream())
+            out.writeBytes(encodeImage(bitmap))
+        }
         }
 
         private fun encodeImage(bitmap: Bitmap): String {
