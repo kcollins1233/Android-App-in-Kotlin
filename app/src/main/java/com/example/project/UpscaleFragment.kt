@@ -103,11 +103,11 @@ class UpscaleFragment : Fragment(), View.OnClickListener {
         private lateinit var socket: Socket
         private lateinit var out: DataOutputStream
 
-        suspend fun start(coroutineContext: CoroutineContext, bitmap: Bitmap) = coroutineScope {
+        suspend fun start(coroutineContext: CoroutineContext, bitmap: Bitmap) {
             withContext(coroutineContext) {
-            socket = Socket("192.168.0.198", 8080)
-            out = DataOutputStream(socket.getOutputStream())
-            out.writeBytes(encodeImage(bitmap))
+                socket = Socket("192.168.0.198", 8080)
+                out = DataOutputStream(socket.getOutputStream())
+                out.writeBytes(encodeImage(bitmap))
         }
         }
 
