@@ -1,44 +1,70 @@
-import socketio
-import eventlet
-import io
-import base64
+import socket
+import struct
 from PIL import Image
+import io
 
-# Create a Socket.IO server
-sio = socketio.Server(async_mode='eventlet', async_handlers=True)
+def receive_image():
+#Create a socket object
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Wrap with a WSGI application
-app = socketio.WSGIApp(sio)
+    # Define the host on which you want to connect
+    # host = socket.gethostname()
 
-@sio.event
-def connect(sid, environ):
-    print('server connected to client with session ID =  ', sid)
-    # response(sid, 'connected')
+    # Define the port on which you want to connect
+    port = 8080
+
+    # connect to the server on local computer
+    s.bind(("192.168.0.197", port))
+    s.listen(4)
+    print("Listening on port: ", port)
+
+    while True:
+        client, addr = s.accept()
+        print("Connection from: ", addr)
+        
+        # Receive the size of the byte array
+        length = struct.unpack('!i', client.recv(4))[0]
+        
+        # Receive the byte array
+        byte_data = b""
+        while len(byte_data) < length:
+            byte_data += client.recv(length - len(byte_data))
+            
+        # Convert the byte array to an image
+        image = Image.open(io.BytesIO(byte_data))
+        image.save("received_image.bmp")
+        client.close()
+        s = 0
+        send_image()
+        
+def send_image():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    port = 8080
+    s.connect(("192.168.0.199", port))
+    s.listen(4)
+    print("Listening on port: ", port)
     
-@sio.event
-def disconnect(sid):
-    print('disconnect=>SERVER', 'SID: ', sid)
+    # Load the image
+    image = Image.open("received_image.bmp")
+    image.show()
     
-@sio.event
-def on_message(sid, data):
-    # print(data)
-    # received_image = Image.open(decode_image(data))
-    # received_image.show()
-    print('image received from client: ', sid, 'data: ', data)
-    sio.emit('response', data)
+    # Convert the image to a byte array
+    byte_data = io.BytesIO()
+    image.save(byte_data, format="BMP")
+    byte_data = byte_data.getvalue()
     
-@sio.event
-def message(sid, data):#
-    sio.send('message', data)
-    print('message ', sid, data)
+    # Send the size of the byte array
+    length = struct.pack('!i', len(byte_data))
+    s.send(length)
     
-def decode_image(data):
-    b = base64.b64decode(data)
-    print(b)
-    image = Image.open(io.BytesIO(b))
-    return image
+    # Send the byte array
+    s.send(byte_data)
     
-if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen(('192.168.0.198', 8080)), app)
+    # Close the connection
+    socket.close()
     
+if __name__ == "__main__":
+    receive_image()
+    
+
     
