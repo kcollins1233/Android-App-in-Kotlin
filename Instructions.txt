@@ -1,0 +1,9 @@
+Due to the file size the zipped archive has been split please unzip them together
+Make sure that the python server has an IP for the client and an IP for the device that the app is running on.
+Make sure the IP is also change in the UpscaleFragment and the ColouriseFragment for the app
+Python 3.12.3 64Bit is needed for compatability
+Android 13+ is needed
+Java 17.0.9
+Gradle 8.4 
+Android Gradle Plugin Version 8.2.2
+The APK is included for the sake of completeness but the IP address will need chaning in android studio testing
