@@ -7,3 +7,4 @@ Java 17.0.9
 Gradle 8.4 
 Android Gradle Plugin Version 8.2.2
 The APK is included for the sake of completeness but the IP address will need chaning in android studio testing
+ColorizeArtistic_gen.pth is needed and can be downloaded from google it needs to be place in src/main/python/models
