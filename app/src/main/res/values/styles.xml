@@ -1,0 +1,31 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="bottomNavigationStyle">@style/MyMenuItemStyle</item>
+    </style>
+
+    <style name="MyMenuItemStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="itemTextColor">@color/purple_200</item>
+        <item name="itemIconTint">@color/purple_200</item>
+        <!-- Add other attributes if needed -->
+    </style>
+
+    <style name="LightTheme" parent="BaseTheme">
+        <item name="backgroundColor">@color/white</item>
+        <item name="colorPrimary">#57FFFFFF</item>
+        <item name="colorPrimaryDark">#57FFFFFF</item>
+        <item name="colorAccent">#57FFFFFF</item>
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+
+    <style name="DarkTheme" parent="BaseTheme">
+        <item name="backgroundColor">@color/white</item>
+        <item name="colorPrimary">#57FFFFFF</item>
+        <item name="colorPrimaryDark">#57FFFFFF</item>
+        <item name="colorAccent">#57FFFFFF</item>
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+</resources>

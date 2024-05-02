@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">RestoreIt</string>
+    <string name="colour_image">Colour Image</string>
+    <string name="upscale_image">Upscale Image</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="colourise_image">Colourise Image</string>
+    <string name="enter_file_name">Enter File Name</string>
+    <string name="save_image">Save Image</string>
+    <string name="settings_dropdown">Settings</string>
+    <string name="settings">Settings</string>
+    <string-array name="DarkMode">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
+</resources>

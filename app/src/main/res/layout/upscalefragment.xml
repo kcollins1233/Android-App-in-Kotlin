@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".UpscaleFragment">
+
+
+    <Button
+        android:id="@+id/ufChooseImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="@string/choose_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/ufProcessButton"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="348dp"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:text="@string/upscale_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ufChooseImage" />
+
+    <ImageView
+        android:id="@+id/ufImageView"
+        android:layout_width="216dp"
+        android:layout_height="188dp"
+        android:src="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toTopOf="@+id/ufProcessButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ufChooseImage" />
+
+    <Button
+        android:id="@+id/ufSaveButton"
+        android:layout_width="125dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="348dp"
+        android:backgroundTint="@color/cardview_dark_background"
+        android:elevation="5dp"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/save_image"
+        android:translationX="-35dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ufChooseImage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
